@@ -15,4 +15,4 @@ class Database():
             if not result["updatedExisting"]:
                 count += 1
 
-        print "Inserted tweets: " + str(count)
+        return count
