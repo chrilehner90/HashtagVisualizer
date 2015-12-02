@@ -81,8 +81,9 @@ if __name__ == "__main__":
         for index, hashtag in enumerate(hashtags):
             print "," + str(len(hashtags) - index),
             twitter_content = twitter_fetcher.fetch_content(hashtag, date)
-            print twitter_content
-            sys.exit(1)
+            if "errors" in twitter_content:
+                print "\n\nError: " + twitter_content["errors"][0]["message"]
+                sys.exit(1)
             if "statuses" in twitter_content:
                 returned_tweets += len(twitter_content["statuses"])
                 inserted_tweets += db.save(twitter_content["statuses"])
