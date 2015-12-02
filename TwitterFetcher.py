@@ -1,8 +1,11 @@
+# -*- coding: utf8 -*-
+
 import urllib
 import json
 import oauth2 as oauth
 
 import config
+import Database
 
 class TwitterFetcher():
     def __init__(self, hashtags, lang="en"):
@@ -23,9 +26,10 @@ class TwitterFetcher():
             else:
                 query_url += urllib.quote(hashtag)
         query_url += "&lang=" + self.lang
+        query_url += "&until=2015-11-29"
         return query_url
 
-    def fetch_twitter_content(self):
+    def fetch_content(self):
         query_url = self.build_query_url()
         try:
             headers, response = self.client.request(query_url, method="GET", body="", headers=None)
@@ -39,6 +43,21 @@ class TwitterFetcher():
         print query_url
 
 if __name__ == "__main__":
-    tf = TwitterFetcher(["#flu", "#grippe"])
-    twc = tf.fetch_twitter_content()
-    print twc
+    twitter_fetcher = TwitterFetcher([
+        "#flu", 
+        "#grippe",
+        "#husten",
+        "#schnupfen",
+        "#kopfschmerzen",
+        "#headache",
+        "#cough",
+        "#sniff",
+        "#krank"
+        ])
+    twitter_content = twitter_fetcher.fetch_content()
+
+    db = Database.Database()
+    print "Returned tweets: " + str(len(twitter_content["statuses"]))
+    db.save(twitter_content["statuses"])
+
+    
