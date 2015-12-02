@@ -6,7 +6,6 @@ import config
 
 class TwitterFetcher():
     def __init__(self, hashtags, lang="en"):
-        print "Constructor"
         self.base_url = "https://api.twitter.com/1.1/search/tweets.json?q="
         self.hashtags = hashtags
         self.lang = lang
@@ -35,8 +34,6 @@ class TwitterFetcher():
         except IOError as error:
             print "IOError occurred!"
             print error
-
-        print query_url
 
 if __name__ == "__main__":
     tf = TwitterFetcher(["#flu", "#grippe"])
