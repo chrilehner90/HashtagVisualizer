@@ -1,0 +1,17 @@
+id
+text
+created_at
+place.country_code
+place.country
+place.full_name
+entities.hashtags.0.text
+entities.hashtags.1.text
+entities.hashtags.2.text
+entities.hashtags.3.text
+entities.hashtags.4.text
+entities.hashtags.5.text
+entities.hashtags.6.text
+entities.hashtags.7.text
+entities.hashtags.8.text
+coordinates.coordinates.0
+coordinates.coordinates.1
