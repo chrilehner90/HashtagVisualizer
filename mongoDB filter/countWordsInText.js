@@ -1,7 +1,10 @@
 use twitter-database;
 
 function map() {
-	var strings = this.text.split(" ");
+	var regex = new RegExp("[#@'-.:()?!]",'g');
+	var text = this.text.replace(regex, '').toLowerCase();
+
+	var strings = text.split(" ");
 
 	for(index in strings) {
 		emit(strings[index], 1);
