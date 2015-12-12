@@ -11,7 +11,6 @@ function map() {
 		"cough",
 		"sniff",
 		"krank",
-		"influenza",
 		"advent",
 		"christmas",
 		"xmas",
@@ -25,13 +24,16 @@ function map() {
 		"isis",
 		"refugees",
 		"refugee",
+		"flüchtlinge",
 		"zuckerberg",
-		"klimakonferenz",
-		"cop21",
-		"cop21paris",
 		"syria",
 		"syrien",
-		"climatechange"
+		"climatechange",
+		"love",
+		"school",
+		"university",
+		"people",
+		"2015"
 	];
 
 	for(searchIndex in tags) {
