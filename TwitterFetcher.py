@@ -12,8 +12,8 @@ class TwitterFetcher():
     def __init__(self):
         self.base_url = "https://api.twitter.com/1.1/search/tweets.json?q="
 
-        consumer = oauth.Consumer(key = config.CONSUMER_KEY, secret = config.CONSUMER_SECRET)
-        access_token = oauth.Token(key = config.ACCESS_TOKEN, secret = config.ACCESS_TOKEN_SECRET)
+        consumer = oauth.Consumer(key=config.CONSUMER_KEY, secret=config.CONSUMER_SECRET)
+        access_token = oauth.Token(key=config.ACCESS_TOKEN, secret=config.ACCESS_TOKEN_SECRET)
         self.client = oauth.Client(consumer, access_token)
 
     def build_query_url(self, hashtags, date):
@@ -41,7 +41,7 @@ class TwitterFetcher():
 if __name__ == "__main__":
 
     hashtags = [
-                "#flu", 
+                "#flu",
                 "#grippe",
                 "#husten",
                 "#schnupfen",
@@ -65,7 +65,15 @@ if __name__ == "__main__":
                 "#is",
                 "#isis",
                 "#refugees",
-                "#refugee"]
+                "#refugee",
+                "#zuckerberg",
+                "#klimakonferenz",
+                "#cop21",
+                "#cop21paris",
+                "#syria",
+                "#syrien",
+                "#climatechange"
+    ]
 
     returned_tweets = 0
     inserted_tweets = 0
@@ -83,6 +91,8 @@ if __name__ == "__main__":
             twitter_content = twitter_fetcher.fetch_content(hashtag, date)
             if "errors" in twitter_content:
                 print "\n\nError: " + twitter_content["errors"][0]["message"]
+                print "Returned tweets: " + str(returned_tweets)
+                print "Inserted tweets: " + str(inserted_tweets)
                 sys.exit(1)
             if "statuses" in twitter_content:
                 returned_tweets += len(twitter_content["statuses"])
