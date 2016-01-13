@@ -1,3 +1,5 @@
+WebDashboard/node_modules/
+
 *.twb
 .idea
 config.py
