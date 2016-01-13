@@ -17,8 +17,10 @@
   },
   "homepage": "https://github.com/chrilehner90/HashtagVisualizer#readme",
   "dependencies": {
+    "body-parser": "^1.14.2",
     "express": "^4.13.3",
     "gulp": "^3.9.0",
+    "jade": "^1.11.0",
     "mongodb": "^2.1.4"
   },
   "devDependencies": {
