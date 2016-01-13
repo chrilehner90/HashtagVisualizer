@@ -20,7 +20,7 @@ gulp.task("js", function() {
     .pipe(babel({
       presets: ["es2015"]
     }))
-    .pipe(concat("app.js"))
+    .pipe(concat("server.js"))
     .pipe(gulp.dest("build"))
     .pipe(livereload());
 
@@ -34,7 +34,7 @@ gulp.task("watch", function() {
 
 gulp.task("nodemon", function(){
 	nodemon({
-		script: 'build/app.js',
+		script: 'build/server.js',
 		ext: 'js html',
 		env: { 'NODE_ENV': 'development' }
 	});
