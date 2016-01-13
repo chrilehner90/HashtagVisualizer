@@ -6,6 +6,9 @@ var app = express();
 
 app.set("view engine", "jade");
 app.set("views", __dirname + "/views");
+
+// serve assets
+app.use(express.static(__dirname + "/client"))
 //app.use(bodyParser)
 
 mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) {
@@ -17,7 +20,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 
 		// var tweets = db.collection("tweets").find().toArray();
 
-		res.render("../views/index");
+		res.render("index");
 
 		// tweets.then(function(tweets) {
 		// 	res.render("views/index", { tweets: tweets });
