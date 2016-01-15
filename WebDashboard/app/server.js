@@ -10,6 +10,7 @@ app.set("views", __dirname + "/views");
 // serve assets
 app.use(express.static(__dirname + "/css"));
 app.use(express.static(__dirname + "/client"));
+app.use(express.static(__dirname + "/images"));
 //app.use(bodyParser)
 
 console.log(__dirname);
@@ -20,15 +21,18 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 	console.log("Server listening to localhost:3000");
 
 	app.get("/", function(req, res) {
+		res.render("index");
 
-		var tweets = db.collection("tweets").find({"retweet_count":{"$gte": 1}}).toArray();
+	});
 
-		// res.render("index");
+	app.get("/tweets", function(req, res) {
+
+		var tweets = db.collection("filteredTweets").find().limit(1000).toArray();
 
 		tweets.then(function(tweets) {
-			res.render("index", { tweets: tweets });
+			res.json(tweets);
 		});
-	})
+	});
 
 
 	app.listen(3000);
