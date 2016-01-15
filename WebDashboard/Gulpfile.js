@@ -10,11 +10,18 @@ var sourceFiles = {
 		app: "app/client/**/*.js",
 		plugins: [
 			"node_modules/angular/angular.min.js",
+			"node_modules/angular-resource/angular-resource.min.js",
 			"node_modules/d3/d3.min.js",
-			"node_modules/c3/c3.min.js"
+			"node_modules/c3/c3.min.js",
+			"node_modules/leaflet/dist/leaflet.js"
 		],
 		css: [
-			"node_modules/c3/c3.min.css"
+			"node_modules/c3/c3.min.css",
+			"node_modules/leaflet/dist/leaflet.css",
+			"app/style/**/*.css"
+		],
+		images: [
+			"node_modules/leaflet/dist/images/*.*"
 		]
 	},
 	server: [
@@ -36,6 +43,7 @@ gulp.task("css", function(){
 	gulp.src(sourceFiles.client.css)
 		.pipe(concat("style.css"))
 		.pipe(gulp.dest("build/css"))
+		.pipe(livereload());
 })
 
 gulp.task("jsClient", function() {
@@ -67,6 +75,7 @@ gulp.task("watch", function() {
   livereload.listen();
   gulp.watch("app/**/*.js", ["js"]);
   gulp.watch("app/**/*.jade", ["jade"]);
+	gulp.watch("app/style/**/*.css", ["css"])
 });
 
 gulp.task("nodemon", function(){
@@ -75,7 +84,12 @@ gulp.task("nodemon", function(){
 		ext: 'js jade',
 		env: { 'NODE_ENV': 'development' }
 	});
-})
+});
+
+gulp.task("images", function() {
+	gulp.src(sourceFiles.client.images)
+		.pipe(gulp.dest("build/images"));
+});
 
 gulp.task("js", ["jsClient", "jsPlugins", "jsServer"]);
-gulp.task("default", ["clean", "js", "jade", "css", "nodemon", "watch"]);
+gulp.task("default", ["clean", "js", "jade", "css", "images", "nodemon", "watch"]);
