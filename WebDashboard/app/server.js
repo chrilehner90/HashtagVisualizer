@@ -18,13 +18,13 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 
 	app.get("/", function(req, res) {
 
-		// var tweets = db.collection("tweets").find().toArray();
+		var tweets = db.collection("tweets").find().toArray();
 
-		res.render("index");
+		// res.render("index");
 
-		// tweets.then(function(tweets) {
-		// 	res.render("views/index", { tweets: tweets });
-		// });
+		tweets.then(function(tweets) {
+			res.render("index", { tweets: tweets });
+		});
 	})
 
 

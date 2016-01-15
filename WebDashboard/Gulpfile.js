@@ -66,5 +66,5 @@ gulp.task("nodemon", function(){
 	});
 })
 
-
-gulp.task("default", ["clean", "jsClient", "jsPlugins", "jsServer", "jade", "nodemon", "watch"]);
+gulp.task("js", ["jsClient", "jsPlugins", "jsServer"]);
+gulp.task("default", ["clean", "js", "jade", "nodemon", "watch"]);
