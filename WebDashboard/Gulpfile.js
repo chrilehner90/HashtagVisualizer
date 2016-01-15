@@ -5,11 +5,16 @@ var livereload = require("gulp-livereload");
 var del = require("del");
 var nodemon = require("gulp-nodemon");
 
-var jsSourceFiles = {
+var sourceFiles = {
 	client: {
 		app: "app/client/**/*.js",
 		plugins: [
-			"node_modules/angular/angular.min.js"
+			"node_modules/angular/angular.min.js",
+			"node_modules/d3/d3.min.js",
+			"node_modules/c3/c3.min.js"
+		],
+		css: [
+			"node_modules/c3/c3.min.css"
 		]
 	},
 	server: [
@@ -17,8 +22,8 @@ var jsSourceFiles = {
 	]
 }
 
-gulp.task("clean", function(){
-	del(["build"]);
+gulp.task("clean", function(cb){
+	del(["build"], cb);
 })
 
 gulp.task("jade", function(){
@@ -27,8 +32,14 @@ gulp.task("jade", function(){
 		.pipe(livereload());
 })
 
+gulp.task("css", function(){
+	gulp.src(sourceFiles.client.css)
+		.pipe(concat("style.css"))
+		.pipe(gulp.dest("build/css"))
+})
+
 gulp.task("jsClient", function() {
-  gulp.src(jsSourceFiles.client.app)
+  gulp.src(sourceFiles.client.app)
     .pipe(babel({
       presets: ["es2015"]
     }))
@@ -38,13 +49,13 @@ gulp.task("jsClient", function() {
 });
 
 gulp.task("jsPlugins", function() {
-	gulp.src(jsSourceFiles.client.plugins)
+	gulp.src(sourceFiles.client.plugins)
 		.pipe(concat("plugins.js"))
 		.pipe(gulp.dest("build/client"))
 })
 
 gulp.task("jsServer", function() {
-	gulp.src(jsSourceFiles.server)
+	gulp.src(sourceFiles.server)
 		.pipe(babel({
 			presets: ["es2015"]
 		}))
@@ -61,10 +72,10 @@ gulp.task("watch", function() {
 gulp.task("nodemon", function(){
 	nodemon({
 		script: 'build/server.js',
-		ext: 'js html',
+		ext: 'js jade',
 		env: { 'NODE_ENV': 'development' }
 	});
 })
 
 gulp.task("js", ["jsClient", "jsPlugins", "jsServer"]);
-gulp.task("default", ["clean", "js", "jade", "nodemon", "watch"]);
+gulp.task("default", ["clean", "js", "jade", "css", "nodemon", "watch"]);

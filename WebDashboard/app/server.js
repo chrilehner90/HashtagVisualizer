@@ -8,8 +8,11 @@ app.set("view engine", "jade");
 app.set("views", __dirname + "/views");
 
 // serve assets
-app.use(express.static(__dirname + "/client"))
+app.use(express.static(__dirname + "/css"));
+app.use(express.static(__dirname + "/client"));
 //app.use(bodyParser)
+
+console.log(__dirname);
 
 mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) {
 	if(err) throw err;
@@ -18,7 +21,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 
 	app.get("/", function(req, res) {
 
-		var tweets = db.collection("tweets").find().toArray();
+		var tweets = db.collection("tweets").find({"retweet_count":{"$gte": 1}}).toArray();
 
 		// res.render("index");
 
