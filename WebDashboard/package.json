@@ -19,6 +19,7 @@
   "homepage": "https://github.com/chrilehner90/HashtagVisualizer#readme",
   "dependencies": {
     "angular": "^1.4.8",
+    "angular-resource": "^1.4.8",
     "body-parser": "^1.14.2",
     "c3": "^0.4.11-rc4",
     "d3": "^3.5.12",
