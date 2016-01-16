@@ -2,3 +2,65 @@
     width: 750px;
     height: 500px;
 }
+
+.css-icon-blue{
+	width: 10px;
+	height: 10px;
+	background: #3498db;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+
+.css-icon-yellow{
+	width: 10px;
+	height: 10px;
+	background: #f39c12;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+.css-icon-purple{
+	width: 10px;
+	height: 10px;
+	background: #9b59b6;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+
+.css-icon-blue:hover{
+	border: 2px solid black;
+}
+
+.css-icon-yellow:hover{
+	border: 2px solid black;
+}
+
+.css-icon-purple:hover{
+	border: 2px solid black;
+}
+
+.dot{
+	width: 20px;
+	height: 20px;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	margin-left: 5px;
+	position: absolute;
+}
+
+.blue{
+	background: #3498db;
+}
+.yellow{
+	background: #f39c12;
+}
+.purple{
+	background: #9b59b6;
+}
+
+.legend p {
+	padding-left: 30px;
+}
