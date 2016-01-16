@@ -75,7 +75,7 @@ gulp.task("watch", function() {
   livereload.listen();
   gulp.watch("app/**/*.js", ["js"]);
   gulp.watch("app/**/*.jade", ["jade"]);
-	gulp.watch("app/style/**/*.css", ["css"])
+  gulp.watch("app/style/**/*.css", ["css"]);
 });
 
 gulp.task("nodemon", function(){
