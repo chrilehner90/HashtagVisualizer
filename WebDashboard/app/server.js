@@ -2,7 +2,7 @@ let express = require("express"),
     mongodb = require("mongodb").MongoClient,
     bodyParser = require("body-parser");
 
-var app = express();
+let app = express();
 
 app.set("view engine", "jade");
 app.set("views", __dirname + "/views");
@@ -12,8 +12,6 @@ app.use(express.static(__dirname + "/css"));
 app.use(express.static(__dirname + "/client"));
 app.use(express.static(__dirname + "/images"));
 //app.use(bodyParser)
-
-console.log(__dirname);
 
 mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) {
 	if(err) throw err;
@@ -27,7 +25,38 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 
 	app.get("/tweets", function(req, res) {
 
-		var tweets = db.collection("filteredTweets").find().limit(1000).toArray();
+		let tweets = db.collection("filteredTweets").find().limit(100).toArray();
+
+		tweets.then(function(tweets) {
+			res.json(tweets);
+		});
+	});
+
+	app.get("/timeline", function(req, res) {
+
+		let tweets = db.collection("filteredTweets").aggregate(
+			[
+				{
+					$project: 
+					{
+						year: { $year: "$value.created_at" },
+						month: {$month: "$value.created_at"},
+						day: {$dayOfMonth: "$value.created_at"},
+						hour: {$hour: "$value.created_at"}
+					}
+				},
+				{
+					$group: 
+					{
+						_id: {"hour": "$hour"},
+						total: { $sum: "$hour" }
+					}
+				},
+				{ 
+					$sort: { "_id.hour": 1 } 
+				}
+			]
+		).limit(1000).toArray();
 
 		tweets.then(function(tweets) {
 			res.json(tweets);
