@@ -28,7 +28,19 @@ class APIFactory {
     return deferred.promise;
   }
 
-  static createClass($resource, $q) {
+  getStateFrequencies() {
+    let deferred = this.$q.defer();
+
+    let TweetResource = this.$resource("/state-frequencies");
+    TweetResource.query(function(tweets) {
+      console.log("TWEETS", tweets);
+      deferred.resolve(tweets);
+    });
+
+    return deferred.promise;
+  }
+
+  static createInstance($resource, $q) {
     return new APIFactory($resource, $q)
   }
 }
@@ -147,8 +159,120 @@ class TimelineController{
 
 }
 
-APIFactory.createClass.$inject = ["$resource", "$q"];
+//class WordcloudController {
+//  constructor(APIFactory) {
+//    this.cloud = d3.layout.cloud();
+//    this.APIFactory = APIFactory;
+//
+//    this.getStateFrequencies();
+//  }
+//
+//  draw(words) {
+//    d3.select("wordcloud").append("svg")
+//      .attr("width", 850)
+//      .attr("height", 350)
+//      .attr("class", "wordcloud")
+//      .append("g")
+//      // without the transform, words words would get cutoff to the left and top, they would
+//      // appear outside of the SVG area
+//      .attr("transform", "translate(320,200)")
+//      .selectAll("text")
+//      .data(words)
+//      .enter().append("text")
+//      .style("font-size", function(d) { return d.size + "px"; })
+//      //c.style("fill", function(d, i) { return color(i); })
+//      .attr("transform", function(d) {
+//        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+//      })
+//      .text(function(d) { return d.text; });
+//  }
+//
+//  getStateFrequencies() {
+//    let promise = this.APIFactory.getStateFrequencies();
+//    let self = this;
+//    promise.then(function(tweets) {
+//      //var frequency_list = [{"text":"study","size":40},{"text":"motion","size":15},{"text":"forces","size":10}];
+//​
+//      d3.layout.cloud().size([800, 300])
+//        .words(frequency_list)
+//        .rotate(0)
+//        .fontSize(function(d) { return d.size; })
+//        .on("end", draw)
+//        .start();
+//
+//        function draw(words) {
+//          d3.select("#wordcloud").append("svg")
+//            .attr("width", 750)
+//            .attr("height", 350)
+//            .attr("class", "wordcloud")
+//            .append("g")
+//            // without the transform, words words would get cutoff to the left and top, they would
+//            // appear outside of the SVG area
+//            .attr("transform", "translate(320,200)")
+//            .selectAll("text")
+//            .data(words)
+//            .enter().append("text")
+//            .style("font-size", function(d) { return d.size + "px"; })
+//            // .style("fill", function(d, i) { return color(i); })
+//            .attr("transform", function(d) {
+//              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+//            })
+//            .text(function(d) { return d.text; });
+//​        }
+//    });
+//  }
+//}
 
-app.factory("APIFactory", APIFactory.createClass);
+class WordcloudController {
+  constructor(APIFactory) {
+    this.APIFactory = APIFactory;
+
+    this.getCountries();
+  }
+
+  getCountries() {
+    let self = this;
+
+    let promise = this.APIFactory.getStateFrequencies();
+    promise.then(function (tweets) {
+      d3.layout.cloud().size([900, 350])
+        .words(tweets)
+        .rotate(0)
+        .text(function(d) { return d._id; })
+        .fontSize(function (d) {
+          return d.size;
+        })
+        .on("end", draw)
+        .start();
+
+      function draw(words) {
+        d3.select("#wordcloud").append("svg")
+          .attr("width", 900)
+          .attr("height", 350)
+          .attr("class", "wordcloud")
+          .append("g")
+          // without the transform, words words would get cutoff to the left and top, they would
+          // appear outside of the SVG area
+          .attr("transform", "translate(" + 900 / 2 + "," + 350 / 2 + ")")
+          .selectAll("text")
+          .data(words)
+          .enter().append("text")
+          .style("font-size", function(d) { return d.size + "px"; })
+          .style("font-family", "Impact")
+          //.style("fill", function(d, i) { return fill(i); })
+          .attr("text-anchor", "middle")
+          .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate()";
+          })
+          .text(function(d) { return d._id; });
+      }
+    });
+  }
+}
+
+APIFactory.createInstance.$inject = ["$resource", "$q"];
+
+app.factory("APIFactory", APIFactory.createInstance);
 app.controller("MapController", ["APIFactory", MapController]);
 app.controller("TimelineController", ["APIFactory", TimelineController]);
+app.controller("WordcloudController", ["APIFactory", WordcloudController]);

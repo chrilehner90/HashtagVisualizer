@@ -13,7 +13,8 @@ var sourceFiles = {
 			"node_modules/angular-resource/angular-resource.min.js",
 			"node_modules/d3/d3.min.js",
 			"node_modules/c3/c3.min.js",
-			"node_modules/leaflet/dist/leaflet.js"
+			"node_modules/leaflet/dist/leaflet.js",
+			"node_modules/d3-cloud/build/d3.layout.cloud.js"
 		],
 		css: [
 			"node_modules/c3/c3.min.css",

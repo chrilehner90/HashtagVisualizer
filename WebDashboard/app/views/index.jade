@@ -5,6 +5,9 @@ html
 	body(ng-app="HashtagVisualizer")
 		h1 Twitter Dashboard
 
+		div(ng-controller="WordcloudController as Wordcloud")
+			#wordcloud
+
 		div(ng-controller="TimelineController as Timeline")
 			#timeline
 

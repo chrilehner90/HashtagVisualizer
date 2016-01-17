@@ -49,7 +49,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 					$group: 
 					{
 						_id: {"hour": "$hour"},
-						total: { $sum: "$hour" }
+						total: { $sum: 1 }
 					}
 				},
 				{ 
@@ -63,6 +63,38 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 		});
 	});
 
+	app.get("/state-frequencies", function(req, res) {
+		let stateFrequencies = db.collection("filteredTweets").aggregate(
+			[
+				{
+					$project: {
+						country: "$value.country"
+					}
+				},
+				{
+					$group: {
+						_id: "$country",
+						size: {
+							$sum: 1
+						}
+					}
+				},
+				{
+					$sort: {
+						count: -1
+					}
+				},
+				{
+					$limit: 1000
+				}
+			]).toArray();
+
+		stateFrequencies.then(function(stateFrequencies) {
+			res.json(stateFrequencies);
+		}, function(error) {
+			console.error(error);
+		});
+	})
 
 	app.listen(3000);
 });
