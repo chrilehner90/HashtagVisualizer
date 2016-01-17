@@ -159,70 +159,6 @@ class TimelineController{
 
 }
 
-//class WordcloudController {
-//  constructor(APIFactory) {
-//    this.cloud = d3.layout.cloud();
-//    this.APIFactory = APIFactory;
-//
-//    this.getStateFrequencies();
-//  }
-//
-//  draw(words) {
-//    d3.select("wordcloud").append("svg")
-//      .attr("width", 850)
-//      .attr("height", 350)
-//      .attr("class", "wordcloud")
-//      .append("g")
-//      // without the transform, words words would get cutoff to the left and top, they would
-//      // appear outside of the SVG area
-//      .attr("transform", "translate(320,200)")
-//      .selectAll("text")
-//      .data(words)
-//      .enter().append("text")
-//      .style("font-size", function(d) { return d.size + "px"; })
-//      //c.style("fill", function(d, i) { return color(i); })
-//      .attr("transform", function(d) {
-//        return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-//      })
-//      .text(function(d) { return d.text; });
-//  }
-//
-//  getStateFrequencies() {
-//    let promise = this.APIFactory.getStateFrequencies();
-//    let self = this;
-//    promise.then(function(tweets) {
-//      //var frequency_list = [{"text":"study","size":40},{"text":"motion","size":15},{"text":"forces","size":10}];
-//​
-//      d3.layout.cloud().size([800, 300])
-//        .words(frequency_list)
-//        .rotate(0)
-//        .fontSize(function(d) { return d.size; })
-//        .on("end", draw)
-//        .start();
-//
-//        function draw(words) {
-//          d3.select("#wordcloud").append("svg")
-//            .attr("width", 750)
-//            .attr("height", 350)
-//            .attr("class", "wordcloud")
-//            .append("g")
-//            // without the transform, words words would get cutoff to the left and top, they would
-//            // appear outside of the SVG area
-//            .attr("transform", "translate(320,200)")
-//            .selectAll("text")
-//            .data(words)
-//            .enter().append("text")
-//            .style("font-size", function(d) { return d.size + "px"; })
-//            // .style("fill", function(d, i) { return color(i); })
-//            .attr("transform", function(d) {
-//              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-//            })
-//            .text(function(d) { return d.text; });
-//​        }
-//    });
-//  }
-//}
-
 class WordcloudController {
   constructor(APIFactory) {
     this.APIFactory = APIFactory;
@@ -238,10 +174,10 @@ class WordcloudController {
       d3.layout.cloud().size([900, 350])
         .words(tweets)
         .rotate(0)
+        .padding(1)
+        .rotate(function(d) { return 0; })
         .text(function(d) { return d._id; })
-        .fontSize(function (d) {
-          return d.size;
-        })
+        .fontSize(function (d) {return d.size;})
         .on("end", draw)
         .start();
 
@@ -262,7 +198,7 @@ class WordcloudController {
           //.style("fill", function(d, i) { return fill(i); })
           .attr("text-anchor", "middle")
           .attr("transform", function(d) {
-            return "translate(" + [d.x, d.y] + ")rotate()";
+            return "translate(" + [d.x, d.y] + ")";
           })
           .text(function(d) { return d._id; });
       }
