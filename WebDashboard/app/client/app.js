@@ -39,6 +39,17 @@ class APIFactory {
     return deferred.promise;
   }
 
+  getCountry(country) {
+    let deferred = this.$q.defer();
+
+    let TweetResource = this.$resource("/country/" + country);
+    TweetResource.query(function(tweets) {
+      deferred.resolve(tweets);
+    });
+
+    return deferred.promise;
+  }
+
   static createInstance($resource, $q) {
     return new APIFactory($resource, $q)
   }
@@ -197,12 +208,23 @@ class WordcloudController {
           // .style("font-family", "Impact")
           //.style("fill", function(d, i) { return fill(i); })
           .attr("text-anchor", "middle")
+          .on("click", function(d) {
+            self.elementClicked(d);
+          })
           .attr("transform", function(d) {
             return "translate(" + [d.x, d.y] + ")";
           })
           .text(function(d) { return d._id; });
       }
     });
+  }
+
+  elementClicked(element) {
+    let promise = this.APIFactory.getCountry(element._id)
+    promise.then(function(tweets) {
+      console.log("TWEETS", tweets)
+    });
+
   }
 }
 

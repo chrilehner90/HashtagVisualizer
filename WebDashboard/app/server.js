@@ -94,7 +94,19 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 		}, function(error) {
 			console.error(error);
 		});
-	})
+	});
+
+	app.get("/country/:name", function(req, res) {
+		let country = db.collection("filteredTweets").find(
+			{
+				"value.country": req.params.name
+			}
+		).toArray();
+
+		country.then(function(country) {
+			res.json(country);
+		})
+	});
 
 	app.listen(3000);
 });
