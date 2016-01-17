@@ -51,14 +51,16 @@ class APIFactory {
   }
 
   static createInstance($resource, $q) {
-    return new APIFactory($resource, $q)
+    return new APIFactory($resource, $q);
   }
 }
 
 class MapController {
-  constructor(APIFactory) {
+  constructor(APIFactory, TweetService, $scope) {
     this.APIFactory = APIFactory;
+    this.TweetService = TweetService;
     this.map = L.map('map').fitWorld();
+    this.markersLayer = undefined;
 
     L.Icon.Default.imagePath = "./";
 
@@ -82,8 +84,49 @@ class MapController {
       iconSize: [10, 10]
     });
 
-    this.getTweets();
 
+    this.$scope = $scope;
+
+    let self = this;
+
+    this.$scope.$watch(function() {
+      return self.TweetService.tweets;
+    }, 
+    function(oldValue, newValue){
+      self.addMarkers();
+    });
+
+    this.getTweets();
+  }
+
+  addMarkers(){
+    let tweets = this.TweetService.getTweets();
+    if (tweets)
+    {
+    // let tweets = this.$scope.tweets;
+      if (this.markersLayer){
+        this.map.removeLayer(this.markersLayer);
+      }
+
+      let markers = new L.featureGroup();
+      let marker;
+      for(let tweet of tweets) {
+        if (tweet.value.text.toLowerCase().search("charliehebdo") > 0) {
+          if (tweet.value.text.toLowerCase().search("jesuischarlie") > 0) {
+            marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconPurple}).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
+          }
+          else {
+            marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconBlue}).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
+          }
+        }
+        else if (tweet.value.text.toLowerCase().search("jesuischarlie") > 0) {
+          marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconYellow}).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
+        }
+        markers.addLayer(marker);
+      }
+      this.map.addLayer(markers); 
+      this.markersLayer =  markers; 
+    }
   }
 
   getTweets() {
@@ -91,19 +134,8 @@ class MapController {
 
     let self = this;
     promise.then(function(tweets) {
-      for(let tweet of tweets) {
-        if (tweet.value.text.toLowerCase().search("charliehebdo") > 0) {
-          if (tweet.value.text.toLowerCase().search("jesuischarlie") > 0) {
-            L.marker([tweet.value.latitude, tweet.value.longitude], {icon: self.cssIconPurple}).addTo(self.map).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
-          }
-          else {
-            L.marker([tweet.value.latitude, tweet.value.longitude], {icon: self.cssIconBlue}).addTo(self.map).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
-          }
-        }
-        else if (tweet.value.text.toLowerCase().search("jesuischarlie") > 0) {
-          L.marker([tweet.value.latitude, tweet.value.longitude], {icon: self.cssIconYellow}).addTo(self.map).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
-        }
-      }      
+      self.TweetService.setTweets(tweets);
+      self.addMarkers();
     });
 
 
@@ -121,15 +153,7 @@ class TimelineController{
         columns: [
           ['x']
         ]
-      }//,
-      // axis: {
-      //   x: {
-      //       type: 'timeseries',
-      //       tick: {
-      //           format: '%Y-%m-%d'
-      //       }
-      //   }
-      // }
+      }
     });
 
     this.getTimeline();
@@ -151,8 +175,6 @@ class TimelineController{
         tweetCount.push(time.total);
       }
 
-      console.log(hours);
-      console.log(tweetCount);
       self.chart.load(
         {
           columns: [
@@ -166,8 +188,9 @@ class TimelineController{
 }
 
 class WordcloudController {
-  constructor(APIFactory) {
+  constructor(APIFactory, TweetService) {
     this.APIFactory = APIFactory;
+    this.TweetService = TweetService
 
     this.getCountries();
   }
@@ -177,8 +200,6 @@ class WordcloudController {
 
     let promise = this.APIFactory.getStateFrequencies();
     promise.then(function (tweets) {
-      console.log("my tweets", tweets);
-      console.log("1", tweets[0]);
       let maxSize = tweets[0].size;
       d3.layout.cloud().size([900, 350])
         .words(tweets)
@@ -191,7 +212,6 @@ class WordcloudController {
         .start();
 
       function draw(words) {
-        console.log("words", words);
         d3.select("#wordcloud").append("svg")
           .attr("width", 900)
           .attr("height", 350)
@@ -221,16 +241,40 @@ class WordcloudController {
 
   elementClicked(element) {
     let promise = this.APIFactory.getCountry(element._id)
+    let self = this;
     promise.then(function(tweets) {
-      console.log("TWEETS", tweets)
+      self.TweetService.setTweets(tweets);
     });
 
   }
 }
 
+class TweetService{
+  constructor(){
+    this.tweets = undefined;
+  }
+
+  setTweets(tweets){
+    this.tweets = tweets;
+  }
+
+  getTweets(){
+    return this.tweets;
+  }
+
+  static createInstance() {
+    return new TweetService();
+  }
+
+}
+
 APIFactory.createInstance.$inject = ["$resource", "$q"];
+WordcloudController.$inject = ["APIFactory", "TweetService"];
+MapController.$inject = ["APIFactory", "TweetService", "$scope"];
+// TweetService.createInstance.$inject = ["$scope"];
 
 app.factory("APIFactory", APIFactory.createInstance);
-app.controller("MapController", ["APIFactory", MapController]);
+app.controller("MapController", MapController);
 app.controller("TimelineController", ["APIFactory", TimelineController]);
-app.controller("WordcloudController", ["APIFactory", WordcloudController]);
+app.controller("WordcloudController", WordcloudController);
+app.service("TweetService", TweetService.createInstance);
