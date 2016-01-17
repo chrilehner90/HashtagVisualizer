@@ -110,20 +110,25 @@ class MapController {
 
       let markers = new L.featureGroup();
       let marker;
+
       for(let tweet of tweets) {
+        
+        let popupMessage = '<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at + '<br><b>Country: </b>' + tweet.value.country;
+
         if (tweet.value.text.toLowerCase().search("charliehebdo") > 0) {
           if (tweet.value.text.toLowerCase().search("jesuischarlie") > 0) {
-            marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconPurple}).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
+            marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconPurple}).bindPopup(popupMessage);
           }
           else {
-            marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconBlue}).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
+            marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconBlue}).bindPopup(popupMessage);
           }
         }
         else if (tweet.value.text.toLowerCase().search("jesuischarlie") > 0) {
-          marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconYellow}).bindPopup('<b>Message: </b>' + tweet.value.text + '<br><b>Timestamp: </b>' + tweet.value.created_at);
+          marker = L.marker([tweet.value.latitude, tweet.value.longitude], {icon: this.cssIconYellow}).bindPopup(popupMessage);
         }
         markers.addLayer(marker);
       }
+
       this.map.addLayer(markers); 
       this.markersLayer =  markers; 
     }
