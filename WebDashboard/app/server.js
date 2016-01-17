@@ -56,7 +56,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 					$sort: { "_id.hour": 1 } 
 				}
 			]
-		).limit(1000).toArray();
+		).limit(100).toArray();
 
 		tweets.then(function(tweets) {
 			res.json(tweets);
@@ -85,7 +85,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 					}
 				},
 				{
-					$limit: 1000
+					$limit: 100
 				}
 			]).toArray();
 
