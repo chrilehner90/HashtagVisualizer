@@ -33,7 +33,6 @@ class APIFactory {
 
     let TweetResource = this.$resource("/state-frequencies");
     TweetResource.query(function(tweets) {
-      console.log("TWEETS", tweets);
       deferred.resolve(tweets);
     });
 
@@ -126,13 +125,10 @@ class TimelineController{
   }
 
   getTimeline() {
-    console.log("i'm here!");
     let promise = this.APIFactory.getTimeline();
 
     let self = this;
     promise.then(function(tweets) {
-      console.log(tweets);
-      
       let hours = [];
       let tweetCount = [];
 
@@ -140,7 +136,6 @@ class TimelineController{
       tweetCount.push('Time');
 
       for(let time of tweets) {
-        console.log(time);
         hours.push(time._id.hour);
         tweetCount.push(time.total);
       }
@@ -171,17 +166,21 @@ class WordcloudController {
 
     let promise = this.APIFactory.getStateFrequencies();
     promise.then(function (tweets) {
+      console.log("my tweets", tweets);
+      console.log("1", tweets[0]);
+      let maxSize = tweets[0].size;
       d3.layout.cloud().size([900, 350])
         .words(tweets)
         .rotate(0)
         .padding(1)
         .rotate(function(d) { return 0; })
         .text(function(d) { return d._id; })
-        .fontSize(function (d) {return d.size;})
+        .fontSize(function (d) {return Math.max((d.size / maxSize) * 200, 10) ;})
         .on("end", draw)
         .start();
 
       function draw(words) {
+        console.log("words", words);
         d3.select("#wordcloud").append("svg")
           .attr("width", 900)
           .attr("height", 350)
@@ -194,7 +193,7 @@ class WordcloudController {
           .data(words)
           .enter().append("text")
           .style("font-size", function(d) { return d.size + "px"; })
-          .style("font-family", "Impact")
+          // .style("font-family", "Impact")
           //.style("fill", function(d, i) { return fill(i); })
           .attr("text-anchor", "middle")
           .attr("transform", function(d) {

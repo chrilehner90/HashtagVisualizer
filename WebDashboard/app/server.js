@@ -81,7 +81,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 				},
 				{
 					$sort: {
-						count: -1
+						size: -1
 					}
 				},
 				{
