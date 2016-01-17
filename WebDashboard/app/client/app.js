@@ -193,6 +193,7 @@ class WordcloudController {
           .data(words)
           .enter().append("text")
           .style("font-size", function(d) { return d.size + "px"; })
+          .attr("class", "wordcloud-text")
           // .style("font-family", "Impact")
           //.style("fill", function(d, i) { return fill(i); })
           .attr("text-anchor", "middle")

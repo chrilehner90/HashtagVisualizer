@@ -68,3 +68,8 @@
 #timeline {
 	width: 750px;
 }
+
+.wordcloud-text:hover{
+	fill: #3498db;
+	cursor: pointer;
+}
