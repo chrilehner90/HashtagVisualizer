@@ -62,6 +62,17 @@ class APIFactory {
     return deferred.promise;
   }
 
+  getCountryTimeline(country) {
+    let deferred = this.$q.defer();
+
+    let TweetResource = this.$resource("/country-timeline/" + country);
+    TweetResource.query(function(tweets) {
+      deferred.resolve(tweets);
+    });
+
+    return deferred.promise;
+  }
+
   getCountryAndTime(country, hour) {
     let deferred = this.$q.defer()
 
@@ -169,7 +180,7 @@ class MapController {
 }
 
 class TimelineController{
-  constructor(APIFactory, TweetService, $q){
+  constructor(APIFactory, TweetService, $q, $scope){
     this.APIFactory = APIFactory;
     this.TweetService = TweetService;
     this.$q = $q;
@@ -189,32 +200,51 @@ class TimelineController{
       }
     });
 
+    this.$scope = $scope;
+
+    this.$scope.$watch(function() {
+      return self.TweetService.country;
+    }, 
+    function(oldValue, newValue){
+      self.getTimeline();
+    });
+
     this.getTimeline();
   }
 
+  updateTimeline(tweets){
+    let hours = [];
+    let tweetCount = [];
+
+    hours.push('x');
+    tweetCount.push('Time');
+
+    for(let time of tweets) {
+      hours.push(time._id.hour);
+      tweetCount.push(time.total);
+    }
+
+    this.chart.load(
+      {
+        columns: [
+          hours,
+          tweetCount
+        ]
+      });
+  }
+
   getTimeline() {
-    let promise = this.APIFactory.getTimeline();
+    let promise = undefined;
+    if(this.TweetService.getCountry()) {
+      promise = this.APIFactory.getCountryTimeline(this.TweetService.getCountry());
+    }
+    else {
+      promise = this.APIFactory.getTimeline();
+    }
 
     let self = this;
     promise.then(function(tweets) {
-      let hours = [];
-      let tweetCount = [];
-
-      hours.push('x');
-      tweetCount.push('Time');
-
-      for(let time of tweets) {
-        hours.push(time._id.hour);
-        tweetCount.push(time.total);
-      }
-
-      self.chart.load(
-        {
-          columns: [
-            hours,
-            tweetCount
-          ]
-        });
+      self.updateTimeline(tweets);
     });
   }
 
@@ -264,29 +294,30 @@ class WordcloudController {
 
   getCountries() {
     let self = this;
+    let maxFontSize = 150;
 
     let promise = this.APIFactory.getStateFrequencies();
     promise.then(function (tweets) {
-      let maxSize = tweets[0].size;
-      d3.layout.cloud().size([900, 350])
+      let maxTweetCount = tweets[0].size;
+      d3.layout.cloud().size([600, 350])
         .words(tweets)
         .rotate(0)
         .padding(1)
         .rotate(function(d) { return 0; })
         .text(function(d) { return d._id; })
-        .fontSize(function (d) {return Math.max((d.size / maxSize) * 200, 10) ;})
+        .fontSize(function (d) {return Math.max((d.size / maxTweetCount) * maxFontSize, 10) ;})
         .on("end", draw)
         .start();
 
       function draw(words) {
         d3.select("#wordcloud").append("svg")
-          .attr("width", 900)
+          .attr("width", 600)
           .attr("height", 350)
           .attr("class", "wordcloud")
           .append("g")
           // without the transform, words words would get cutoff to the left and top, they would
           // appear outside of the SVG area
-          .attr("transform", "translate(" + 900 / 2 + "," + 350 / 2 + ")")
+          .attr("transform", "translate(" + 600 / 2 + "," + 350 / 2 + ")")
           .selectAll("text")
           .data(words)
           .enter().append("text")
@@ -296,7 +327,10 @@ class WordcloudController {
           //.style("fill", function(d, i) { return fill(i); })
           .attr("text-anchor", "middle")
           .on("click", function(d) {
+            console.log(d);
             self.setCountry(d._id);
+            d3.selectAll(".wordcloud-text").classed("inactive", true);
+            d3.select(this).classed("inactive", false);
           })
           .attr("transform", function(d) {
             return "translate(" + [d.x, d.y] + ")";
@@ -336,6 +370,8 @@ class WordcloudController {
     promise.then(function(tweets) {
       self.TweetService.setCountry(undefined);
       self.TweetService.setTweets(tweets);
+
+      d3.selectAll(".wordcloud-text").classed("inactive", false);
     });
   }
 }
@@ -379,7 +415,7 @@ class TweetService{
 
 APIFactory.createInstance.$inject = ["$resource", "$q"];
 WordcloudController.$inject = ["APIFactory", "TweetService"];
-TimelineController.$inject = ["APIFactory", "TweetService", "$q"];
+TimelineController.$inject = ["APIFactory", "TweetService", "$q", "$scope"];
 MapController.$inject = ["APIFactory", "TweetService", "$scope"];
 // TweetService.createInstance.$inject = ["$scope"];
 

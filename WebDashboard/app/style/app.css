@@ -1,6 +1,6 @@
 #map {
-    width: 750px;
-    height: 500px;
+    width: 1000px;
+    height: 600px;
 }
 
 .css-icon-blue{
@@ -66,10 +66,24 @@
 }
 
 #timeline {
-	width: 750px;
+	width: 600px;
+}
+
+#wordcloud {
+	width: 600px;
 }
 
 .wordcloud-text:hover{
 	fill: #3498db;
 	cursor: pointer;
+}
+
+.inactive {
+	opacity: 0.5;
+}
+
+.inactive:hover{
+	fill: #3498db;
+	cursor: pointer;
+	opacity: 1;
 }

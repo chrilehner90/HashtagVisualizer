@@ -63,6 +63,40 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 		});
 	});
 
+	app.get("/country-timeline/:country", function(req, res) {
+
+		let tweets = db.collection("filteredTweets").aggregate(
+			[
+				{
+					$match: {"value.country": req.params.country}
+				},
+				{
+					$project: 
+					{
+						year: { $year: "$value.created_at" },
+						month: {$month: "$value.created_at"},
+						day: {$dayOfMonth: "$value.created_at"},
+						hour: {$hour: "$value.created_at"}
+					}
+				},
+				{
+					$group: 
+					{
+						_id: {"hour": "$hour"},
+						total: { $sum: 1 }
+					}
+				},
+				{ 
+					$sort: { "_id.hour": 1 } 
+				}
+			]
+		).toArray();
+
+		tweets.then(function(tweets) {
+			res.json(tweets);
+		});
+	});
+
 	app.get("/state-frequencies", function(req, res) {
 		let stateFrequencies = db.collection("filteredTweets").aggregate(
 			[
