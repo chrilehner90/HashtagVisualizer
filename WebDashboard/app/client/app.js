@@ -33,7 +33,6 @@ class APIFactory {
 
     let TweetResource = this.$resource("/time/" + hour);
     TweetResource.query(function(tweets) {
-      console.log("getTime apifactory", tweets);
       deferred.resolve(tweets);
     });
 
@@ -194,8 +193,15 @@ class TimelineController{
         columns: [
           ['x']
         ],
+        colors: {'Time': "#000000"},
         onclick: function(e){
           self.setTime(e.x);
+          console.log(e);
+          d3.selectAll(".c3-circle").classed("inactive", true);
+          d3.selectAll(".c3-line").classed("inactive", true);
+          d3.selectAll(".c3-circle").classed("active", false);
+          d3.select(".c3-circle-" + e.index).classed("inactive", false);
+          d3.select(".c3-circle-" + e.index).classed("active", true);
         }
       }
     });
@@ -330,7 +336,9 @@ class WordcloudController {
             console.log(d);
             self.setCountry(d._id);
             d3.selectAll(".wordcloud-text").classed("inactive", true);
+            d3.selectAll(".wordcloud-text").classed("active", false);
             d3.select(this).classed("inactive", false);
+            d3.select(this).classed("active", true);
           })
           .attr("transform", function(d) {
             return "translate(" + [d.x, d.y] + ")";
@@ -372,6 +380,7 @@ class WordcloudController {
       self.TweetService.setTweets(tweets);
 
       d3.selectAll(".wordcloud-text").classed("inactive", false);
+      d3.selectAll(".wordcloud-text").classed("active", false);
     });
   }
 }

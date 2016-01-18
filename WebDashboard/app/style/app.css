@@ -1,3 +1,9 @@
+/*
+green:  #66c2a5
+orange: #fc8d62
+purple: #8da0cb
+*/
+
 #map {
     width: 1000px;
     height: 600px;
@@ -6,7 +12,7 @@
 .css-icon-blue{
 	width: 10px;
 	height: 10px;
-	background: #3498db;
+	background: #66c2a5;
 	-moz-border-radius: 50%;
 	-webkit-border-radius: 50%;
 	border-radius: 50%;
@@ -15,7 +21,7 @@
 .css-icon-yellow{
 	width: 10px;
 	height: 10px;
-	background: #f39c12;
+	background: #fc8d62;
 	-moz-border-radius: 50%;
 	-webkit-border-radius: 50%;
 	border-radius: 50%;
@@ -23,7 +29,7 @@
 .css-icon-purple{
 	width: 10px;
 	height: 10px;
-	background: #9b59b6;
+	background: #8da0cb;
 	-moz-border-radius: 50%;
 	-webkit-border-radius: 50%;
 	border-radius: 50%;
@@ -52,13 +58,13 @@
 }
 
 .blue{
-	background: #3498db;
+	background: #66c2a5;
 }
 .yellow{
-	background: #f39c12;
+	background: #fc8d62;
 }
 .purple{
-	background: #9b59b6;
+	background: #8da0cb;
 }
 
 .legend p {
@@ -73,17 +79,29 @@
 	width: 600px;
 }
 
-.wordcloud-text:hover{
-	fill: #3498db;
-	cursor: pointer;
+.c3-circle._expanded_, .c3-circle._expanded_:hover, .wordcloud-text:hover{
+	fill: #fc8d62 !important;
+	cursor: pointer !important;
+	r: 6;
+	opacity: 1;
 }
 
 .inactive {
-	opacity: 0.5;
+	opacity: 0.5 !important;
+}
+
+.active {
+	opacity: 1 !important;
+	fill: #66c2a5 !important;
+	r: 6;
 }
 
 .inactive:hover{
-	fill: #3498db;
-	cursor: pointer;
-	opacity: 1;
+	fill: #fc8d62 !important;
+	cursor: pointer !important;
+	opacity: 1 !important;
+}
+
+.c3-line {
+    stroke-width: 2px;
 }
