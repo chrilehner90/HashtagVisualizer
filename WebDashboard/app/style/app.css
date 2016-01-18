@@ -83,7 +83,7 @@ purple: #8da0cb
 	fill: #fc8d62 !important;
 	cursor: pointer !important;
 	r: 6;
-	opacity: 1;
+	opacity: 1 !important;
 }
 
 .inactive {
