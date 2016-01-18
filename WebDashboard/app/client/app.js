@@ -28,6 +28,18 @@ class APIFactory {
     return deferred.promise;
   }
 
+  getTime(hour) {
+    let deferred = this.$q.defer();
+
+    let TweetResource = this.$resource("/time/" + hour);
+    TweetResource.query(function(tweets) {
+      console.log("getTime apifactory", tweets);
+      deferred.resolve(tweets);
+    });
+
+    return deferred.promise;
+  }
+
   getStateFrequencies() {
     let deferred = this.$q.defer();
 
@@ -148,8 +160,11 @@ class MapController {
 }
 
 class TimelineController{
-  constructor(APIFactory){
+  constructor(APIFactory, TweetService){
     this.APIFactory = APIFactory;
+    this.TweetService = TweetService;
+
+    let self = this;
     this.chart = c3.generate(
     {
       bindto: '#timeline',
@@ -157,7 +172,10 @@ class TimelineController{
         x: 'x',
         columns: [
           ['x']
-        ]
+        ],
+        onclick: function(e){
+          self.setTime(e.x);
+        }
       }
     });
 
@@ -189,6 +207,25 @@ class TimelineController{
         });
     });
   }
+
+  setTime(hour){
+    console.log("hour", hour);
+    let promise = this.APIFactory.getTime(hour);
+    let self = this;
+    promise.then(function(tweets) {
+      console.log("setTime", tweets);
+      self.TweetService.setTweets(tweets);
+    });
+  }
+
+  // resetTime() {
+  //   let promise = this.APIFactory.getTimeline();
+
+  //   let self = this;
+  //   promise.then(function(tweets) {
+  //     self.TweetService.setTweets(tweets);
+  //   });
+  // }
 
 }
 
@@ -250,7 +287,15 @@ class WordcloudController {
     promise.then(function(tweets) {
       self.TweetService.setTweets(tweets);
     });
+  }
 
+  resetCountries() {
+    let promise = this.APIFactory.getTweets();
+
+    let self = this;
+    promise.then(function(tweets) {
+      self.TweetService.setTweets(tweets);
+    });
   }
 }
 
@@ -275,11 +320,12 @@ class TweetService{
 
 APIFactory.createInstance.$inject = ["$resource", "$q"];
 WordcloudController.$inject = ["APIFactory", "TweetService"];
+TimelineController.$inject = ["APIFactory", "TweetService"];
 MapController.$inject = ["APIFactory", "TweetService", "$scope"];
 // TweetService.createInstance.$inject = ["$scope"];
 
 app.factory("APIFactory", APIFactory.createInstance);
 app.controller("MapController", MapController);
-app.controller("TimelineController", ["APIFactory", TimelineController]);
+app.controller("TimelineController", TimelineController);
 app.controller("WordcloudController", WordcloudController);
 app.service("TweetService", TweetService.createInstance);

@@ -6,9 +6,12 @@ html
 		h1 Twitter Dashboard
 
 		div(ng-controller="WordcloudController as Wordcloud")
+			button(ng-click="Wordcloud.resetCountries()") Reset
 			#wordcloud
 
+
 		div(ng-controller="TimelineController as Timeline")
+			button(ng-click="Timeline.resetTime()") Reset
 			#timeline
 
 		div(ng-controller="MapController as Map")
