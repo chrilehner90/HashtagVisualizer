@@ -270,23 +270,26 @@ class TimelineController{
     });
   }
 
-   resetTime() {
-     let timelinePromise = this.APIFactory.getTimeline();
-     let promise = undefined;
+  resetTime() {
+    let timelinePromise = this.APIFactory.getTimeline();
+    let promise = undefined;
 
-     if(this.TweetService.getCountry()) {
-       promise = this.APIFactory.getCountry(this.TweetService.getCountry());
-     }
-     else {
-       promise = this.APIFactory.getTweets();
-     }
+    if(this.TweetService.getCountry()) {
+      promise = this.APIFactory.getCountry(this.TweetService.getCountry());
+    }
+    else {
+      promise = this.APIFactory.getTweets();
+    }
 
-     let self = this;
-     this.$q.all([timelinePromise, promise]).then(function(tweets) {
-       self.TweetService.setTime(undefined);
-       self.TweetService.setTweets(tweets[1]);
-     });
-   }
+    let self = this;
+    this.$q.all([timelinePromise, promise]).then(function(tweets) {
+      self.TweetService.setTime(undefined);
+      self.TweetService.setTweets(tweets[1]);
+      d3.selectAll(".c3-line").classed("inactive", false);
+      d3.selectAll(".c3-circle").classed("inactive", false);
+      d3.selectAll(".c3-circle").classed("active", false);
+    });
+  }
 
 }
 
