@@ -209,13 +209,16 @@ class TimelineController{
   }
 
   setTime(hour){
-    console.log("hour", hour);
-    let promise = this.APIFactory.getTime(hour);
-    let self = this;
-    promise.then(function(tweets) {
-      console.log("setTime", tweets);
-      self.TweetService.setTweets(tweets);
-    });
+    if(this.TweetService.country) {
+
+    }
+    else {
+      let promise = this.APIFactory.getTime(hour);
+      let self = this;
+      promise.then(function(tweets) {
+        self.TweetService.setTweets(tweets);
+      });
+    }
   }
 
   // resetTime() {
@@ -302,6 +305,8 @@ class WordcloudController {
 class TweetService{
   constructor(){
     this.tweets = undefined;
+    this.country = undefined;
+    this.time = undefined;
   }
 
   setTweets(tweets){
