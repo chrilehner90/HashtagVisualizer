@@ -127,5 +127,28 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 		});
 	});
 
+	app.get("/country/:name/time/:hour", function(req, res) {
+		let hour = req.params.hour;
+		if (hour < 10) {
+			hour = "0" + hour;
+		}
+
+		let tweets = db.collection("filteredTweets").find(
+			{
+				"value.country": req.params.name,
+				"value.created_at":
+				{
+					"$gte": new Date("2015-01-09T" + hour + ":00:00"),
+					"$lte": new Date("2015-01-09T" + hour + ":59:59")
+				}
+			}
+		).toArray();
+
+		tweets.then(function(tweets) {
+			res.json(tweets);
+		})
+
+	});
+
 	app.listen(3000);
 });
