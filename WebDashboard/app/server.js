@@ -25,7 +25,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 
 	app.get("/tweets", function(req, res) {
 
-		let tweets = db.collection("filteredTweets").find().limit(100).toArray();
+		let tweets = db.collection("filteredTweets").find().limit(800).toArray();
 
 		tweets.then(function(tweets) {
 			res.json(tweets);
@@ -56,7 +56,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 					$sort: { "_id.hour": 1 } 
 				}
 			]
-		).limit(100).toArray();
+		).limit(800).toArray();
 
 		tweets.then(function(tweets) {
 			res.json(tweets);
@@ -119,7 +119,7 @@ mongodb.connect("mongodb://localhost:27017/twitter-database", function(err, db) 
 					}
 				},
 				{
-					$limit: 100
+					$limit: 800
 				}
 			]).toArray();
 
