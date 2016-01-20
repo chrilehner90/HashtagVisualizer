@@ -203,6 +203,17 @@ class TimelineController{
           d3.select(".c3-circle-" + e.index).classed("inactive", false);
           d3.select(".c3-circle-" + e.index).classed("active", true);
         }
+      },
+      axis: {
+        x: {
+          label: "Hours of day"
+        },
+        y: {
+          label: "Number of tweets"
+        }
+      },
+      point: {
+        r: 5
       }
     });
 

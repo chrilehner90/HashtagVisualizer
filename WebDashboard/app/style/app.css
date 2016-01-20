@@ -104,7 +104,6 @@ purple: #8da0cb
 .c3-circle._expanded_, .c3-circle._expanded_:hover, .wordcloud-text:hover{
 	fill: #fc8d62 !important;
 	cursor: pointer !important;
-	r: 6;
 	opacity: 1 !important;
 }
 
@@ -115,7 +114,6 @@ purple: #8da0cb
 .active {
 	opacity: 1 !important;
 	fill: #66c2a5 !important;
-	r: 6;
 }
 
 .inactive:hover{
@@ -126,4 +124,8 @@ purple: #8da0cb
 
 .c3-line {
     stroke-width: 2px;
+}
+
+.c3 svg {
+	font-size: 14px;
 }
