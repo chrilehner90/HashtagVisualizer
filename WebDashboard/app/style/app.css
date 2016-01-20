@@ -5,8 +5,30 @@ purple: #8da0cb
 */
 
 #map {
-    width: 1000px;
-    height: 600px;
+    width: 100vw;
+    height: 100%;
+}
+
+#wordcloud-container, #timeline-container {
+	width: 49vw;
+	height: 45vh;
+	float: left;
+}
+
+#map-container {
+	clear: left;
+	width: 100vw;
+	height: 50vh;
+	position: relative;
+}
+
+.legend {
+	width: 150px;
+	position: absolute;
+	right: 60px;
+	top:  calc(25vh - 130px);
+	background: white;
+	padding: 5px;
 }
 
 .css-icon-blue{

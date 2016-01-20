@@ -5,26 +5,27 @@ html
 	body(ng-app="HashtagVisualizer")
 		h1 Twitter Dashboard
 
-		div(ng-controller="WordcloudController as Wordcloud")
-			button(ng-click="Wordcloud.resetCountries()") Reset Country
-			#wordcloud
+		#container
+			#wordcloud-container(ng-controller="WordcloudController as Wordcloud")
+				button(ng-click="Wordcloud.resetCountries()") Reset Country
+				#wordcloud
 
 
-		div(ng-controller="TimelineController as Timeline")
-			button(ng-click="Timeline.resetTime()") Reset Time
-			#timeline
+			#timeline-container(ng-controller="TimelineController as Timeline")
+				button(ng-click="Timeline.resetTime()") Reset Time
+				#timeline
 
-		div(ng-controller="MapController as Map")
-			#map
+			#map-container(ng-controller="MapController as Map")
+				#map
 
-		.legend
-			h3 Legend
-			.dot.blue 
-			p #charliehebdo
-			.dot.yellow
-			p #jesuischarlie
-			.dot.purple
-			p both #hashtags
+				.legend
+					h3 Legend
+					.dot.blue
+					p #charliehebdo
+					.dot.yellow
+					p #jesuischarlie
+					.dot.purple
+					p both #hashtags
 
 
 
